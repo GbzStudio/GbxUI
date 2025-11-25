@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MEGA SITE @its.gbzin_ — Recorde Mundial (Com Firebase)</title>
+<meta name="description" content="Mega site do @its.gbzin_ com posts em tempo real, auth Google, upload de imagens e muito mais." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='60'%3E🌐%3C/text%3E%3C/svg%3E">
+
+<style>
+  :root{
+    --bg:#05060a; --card:#0f1724; --muted:#9aa4b2; --accent:#7c3aed; --accent2:#06b6d4;
+    --radius:14px; --maxw:1300px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:
+    radial-gradient(900px 400px at 10% 10%, rgba(124,58,237,0.06), transparent),
+    linear-gradient(180deg,#020217 0%,var(--bg) 100%); color:#e7f0ff; -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:var(--maxw);margin:18px auto;padding:18px}
+  header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border:1px solid rgba(255,255,255,0.03)}
+  .brand{display:flex;gap:14px;align-items:center}
+  .avatar{width:72px;height:72px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-weight:800}
+  .title h1{margin:0;font-size:18px} .title p{margin:0;color:var(--muted);font-size:13px}
+  nav{display:flex;gap:8px;align-items:center}
+  .btn{background:linear-gradient(90deg,var(--accent),var(--accent2));padding:8px 12px;border-radius:10px;border:0;color:#041026;font-weight:800;cursor:pointer}
+  .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
+  main{display:grid;grid-template-columns:1fr 380px;gap:18px;margin-top:16px}
+  @media(max-width:980px){main{grid-template-columns:1fr} .right{order:-1}}
+  .panel{background:linear-gradient(180deg, rgba(255,255,255,0.015), transparent);padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+  .hero{display:flex;gap:18px;align-items:center}
+  .tag{background:linear-gradient(90deg,var(--accent),var(--accent2));padding:6px 10px;border-radius:999px;color:#041026;font-weight:800}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
+  @media(max-width:720px){.grid{grid-template-columns:1fr}}
+  .card{padding:12px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);border:1px solid rgba(255,255,255,0.02)}
+  .portfolio{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  @media(max-width:980px){.portfolio{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.portfolio{grid-template-columns:1fr}}
+  .thumb{height:110px;border-radius:10px;background:linear-gradient(135deg, rgba(124,58,237,0.12), rgba(6,182,212,0.06));display:flex;align-items:center;justify-content:center;font-weight:700;position:relative;overflow:hidden}
+  .muted{color:var(--muted)}
+  footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px;padding:12px}
+  /* posts */
+  #postsFeed{display:grid;gap:12px;margin-top:12px}
+  .post{padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent)}
+  .post .meta{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px}
+  .post img{max-width:100%;border-radius:8px;margin-top:10px}
+  .actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .small{font-size:13px;color:var(--muted)}
+  .big-section{margin-top:18px;padding:18px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);border:1px solid rgba(255,255,255,0.02)}
+  input,textarea{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:10px;border-radius:8px;color:inherit;width:100%}
+  .center{display:flex;align-items:center;justify-content:center}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="avatar">GBZ</div>
+        <div class="title">
+          <h1>@its.gbzin_ — Mega Site</h1>
+          <p class="muted">Contato profissional: <strong id="phone-display">15 996228860</strong></p>
+        </div>
+      </div>
+
+      <nav>
+        <button class="btn" onclick="scrollToId('hero')">Início</button>
+        <button class="btn ghost" onclick="scrollToId('conteudos')">Conteúdos</button>
+        <button class="btn ghost" onclick="scrollToId('posts')">Posts</button>
+        <button id="auth-btn" class="btn ghost">Entrar (Google)</button>
+      </nav>
+    </header>
+
+    <main>
+      <!-- LEFT -->
+      <section>
+        <div class="panel hero" id="hero">
+          <div style="flex:1">
+            <div class="tag">Recorde Mundial</div>
+            <h2 style="margin:6px 0 0 0">O MAIOR SITE JÁ CRIADO para @its.gbzin_</h2>
+            <p class="muted" style="margin-top:8px">Este é um mega-site single-file com posts em tempo real (Firebase), upload de imagens, autenticação, likes, moderação local e centenas de seções automáticas.</p>
+            <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn" onclick="scrollToId('posts')">Postar agora</button>
+              <button class="btn ghost" id="download-vcard">Baixar vCard</button>
+              <button class="btn ghost" onclick="copyToClipboard('@its.gbzin_')">Copiar IG</button>
+              <button class="btn ghost" onclick="copyToClipboard('15 996228860')">Copiar Telefone</button>
+            </div>
+          </div>
+          <div style="width:220px;text-align:right">
+            <div class="small muted">Status Firebase:</div>
+            <div id="fb-status" class="small">inicializando...</div>
+          </div>
+        </div>
+
+        <div class="grid" style="margin-top:12px">
+          <div class="card">
+            <h3>Serviços</h3>
+            <p class="muted">Consultoria, criação de conteúdo, design e desenvolvimento.</p>
+            <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+              <span class="small muted">Branding</span><span class="small muted">Landing</span><span class="small muted">Reels</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Sobre</h3>
+            <p class="muted">Profissional e criador com presença forte no Instagram e projetos digitais.</p>
+          </div>
+
+          <div class="card" id="conteudos">
+            <h3>Conteúdos</h3>
+            <p class="muted">Tópicos: tutoriais, notícias, listas e ideias para criadores.</p>
+            <div class="portfolio" style="margin-top:12px">
+              <div class="thumb">Tutoriais</div>
+              <div class="thumb">Reels</div>
+              <div class="thumb">Mini-projetos</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Portfólio (demos)</h3>
+            <p class="muted">Exemplos rápidos de trabalhos e mini-sites.</p>
+          </div>
+        </div>
+
+        <!-- POSTS SECTION -->
+        <div class="big-section" id="posts" style="margin-top:18px">
+          <h2>Posts em tempo real</h2>
+          <p class="muted">Faça login para postar com nome verificado (Google). Usuários anônimos também podem postar.</p>
+
+          <div style="display:flex;gap:12px;margin-top:12px;align-items:flex-start;flex-wrap:wrap">
+            <div style="flex:1;min-width:260px">
+              <input id="post-title" placeholder="Título (opcional)" />
+              <div style="height:8px"></div>
+              <textarea id="post-text" rows="4" placeholder="Escreva seu post..."></textarea>
+              <div style="height:8px"></div>
+              <input type="file" id="post-image" accept="image/*" />
+              <div style="height:8px"></div>
+              <div style="display:flex;gap:8px">
+                <button class="btn" id="btn-post">Publicar</button>
+                <button class="btn ghost" onclick="setModKey()">Definir chave mod</button>
+                <button class="btn ghost" onclick="clearModKey()">Limpar chave</button>
+              </div>
+              <div id="post-msg" class="small muted" style="margin-top:8px"></div>
+            </div>
+
+            <div style="width:320px">
+              <div class="panel">
+                <div class="small muted">Conectado como:</div>
+                <div id="user-info" style="margin-top:8px">anônimo</div>
+                <div style="height:8px"></div>
+                <div class="small muted">Chave mod local:</div>
+                <div id="mod-ind" class="small muted">nenhuma</div>
+                <div style="height:8px"></div>
+                <div class="small muted">Pesquisar posts</div>
+                <input id="search" placeholder="Filtrar texto..." oninput="renderPosts()" />
+              </div>
+            </div>
+          </div>
+
+          <div id="postsFeed"></div>
+        </div>
+
+        <!-- GIANT SECTION FOR RECORD -->
+        <div class="big-section" style="margin-top:18px">
+          <h2>Seções para Recorde</h2>
+          <p class="muted">Gerando centenas de blocos automáticos para deixar o site gigantesco.</p>
+          <div id="megaBlocks" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:12px"></div>
+        </div>
+      </section>
+
+      <!-- RIGHT -->
+      <aside class="right">
+        <div class="panel">
+          <h3>Contato Rápido</h3>
+          <div class="muted small">WhatsApp / Telefone</div>
+          <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
+            <div style="flex:1" class="small">15 996228860</div>
+            <a class="btn ghost" id="wa-link" target="_blank" rel="noopener">Abrir WhatsApp</a>
+          </div>
+          <div style="height:10px"></div>
+          <div class="muted small">Instagram</div>
+          <div style="margin-top:8px;display:flex;gap:8px">
+            <div class="small">@its.gbzin_</div>
+            <a class="btn ghost" href="https://instagram.com/its.gbzin_" target="_blank" rel="noopener">Abrir</a>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:12px">
+          <h3>Estatísticas</h3>
+          <div style="margin-top:8px" class="small muted">Posts totais: <strong id="count">0</strong></div>
+          <div style="margin-top:6px" class="small muted">Likes totais: <strong id="likes-total">0</strong></div>
+        </div>
+
+        <div class="panel" style="margin-top:12px">
+          <h3>Assine novidades</h3>
+          <div style="margin-top:8px;display:flex;gap:8px">
+            <input id="news-email" placeholder="seu@email.com" />
+            <button class="btn" onclick="fakeSubscribe()">Assinar</button>
+          </div>
+          <div id="news-msg" class="small muted" style="margin-top:8px"></div>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      © <span id="year"></span> @its.gbzin_ • Contato: <strong>15 996228860</strong> • Mega Site com Firebase
+    </footer>
+  </div>
+
+  <!-- Firebase compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+
+  <script>
+  /********************************************************************
+   * CONFIGURAÇÃO FIREBASE (fornecida por você)
+   ********************************************************************/
+  const firebaseConfig = {
+    apiKey: "AIzaSyANLqvkka2W2Fbnm59I-MXEm-nEo_is1Sw",
+    authDomain: "gbxui-b5063.firebaseapp.com",
+    projectId: "gbxui-b5063",
+    storageBucket: "gbxui-b5063.firebasestorage.app",
+    messagingSenderId: "57132814774",
+    appId: "1:57132814774:web:e4583040dd27a8ab637117"
+  };
+
+  // Inicializa firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  const storage = firebase.storage();
+
+  // Shortcuts DOM
+  const userInfoEl = document.getElementById('user-info');
+  const authBtn = document.getElementById('auth-btn');
+  const fbStatus = document.getElementById('fb-status');
+  const postsFeed = document.getElementById('postsFeed');
+  const countEl = document.getElementById('count');
+  const likesTotalEl = document.getElementById('likes-total');
+  const megaBlocks = document.getElementById('megaBlocks');
+
+  // STATE
+  let currentUser = null;
+  let postsCache = {}; // id -> doc data
+  let totalLikes = 0;
+
+  // Inicial
+  document.getElementById('year').textContent = new Date().getFullYear();
+  document.getElementById('wa-link').href = 'https://wa.me/5515996228860';
+
+  // Auth: Google sign-in / sign-out
+  authBtn.addEventListener('click', async ()=>{
+    if(currentUser){
+      await auth.signOut();
+    } else {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      try {
+        await auth.signInWithPopup(provider);
+      } catch(e){ console.error('Erro login:', e); alert('Erro ao logar: ' + e.message); }
+    }
+  });
+
+  auth.onAuthStateChanged(user=>{
+    currentUser = user;
+    if(user){
+      userInfoEl.innerHTML = `<div style="display:flex;gap:8px;align-items:center">
+        <img src="${user.photoURL||''}" alt="" style="width:36px;height:36px;border-radius:999px;object-fit:cover"/>
+        <div>
+          <div style="font-weight:800">${user.displayName||user.email||'Usuário'}</div>
+          <div class="muted small">${user.email || 'anônimo'}</div>
+        </div>
+      </div>`;
+      authBtn.textContent = 'Sair';
+    } else {
+      userInfoEl.textContent = 'anônimo — você pode postar sem login, mas login Google adiciona verificação';
+      authBtn.textContent = 'Entrar (Google)';
+    }
+  });
+
+  // MOD KEY (local)
+  function setModKey(){
+    const k = prompt('Defina uma chave local de moderação (salva no navegador):');
+    if(k){ localStorage.setItem('gbz_mod_key', k); updateModIndicator(); alert('Chave salva localmente.'); }
+  }
+  function clearModKey(){ localStorage.removeItem('gbz_mod_key'); updateModIndicator(); toast('Chave removida'); }
+  function getModKey(){ return localStorage.getItem('gbz_mod_key') || null; }
+  function updateModIndicator(){ document.getElementById('mod-ind').textContent = getModKey() ? 'salva' : 'nenhuma'; }
+  updateModIndicator();
+
+  // UTILIDADES
+  function toast(msg){
+    const el = document.createElement('div');
+    el.textContent = msg;
+    el.style.position='fixed';el.style.right='18px';el.style.bottom='18px';el.style.padding='10px 14px';
+    el.style.background='rgba(0,0,0,0.6)';el.style.color='white';el.style.borderRadius='10px';el.style.zIndex=9999;
+    document.body.appendChild(el);
+    setTimeout(()=>el.style.opacity='0',1600); setTimeout(()=>el.remove(),2200);
+  }
+  async function copyToClipboard(text){
+    try{ await navigator.clipboard.writeText(text); toast('Copiado: ' + text); }
+    catch(e){ alert('Falha ao copiar: ' + text); }
+  }
+
+  // vCard
+  document.getElementById('download-vcard').addEventListener('click', ()=>{
+    const vcard = [
+      'BEGIN:VCARD',
+      'VERSION:3.0',
+      'FN:its.gbzin_',
+      'TEL;TYPE=WORK,VOICE:+5515996228860',
+      'URL:https://instagram.com/its.gbzin_',
+      'NOTE:Contato profissional — Instagram: @its.gbzin_',
+      'END:VCARD'
+    ].join('\\r\\n');
+    const blob = new Blob([vcard], {type:'text/vcard'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href=url; a.download='its-gbzin.vcf'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    toast('vCard gerado');
+  });
+
+  // POST: criar (com upload opcional)
+  document.getElementById('btn-post').addEventListener('click', async ()=>{
+    const title = document.getElementById('post-title').value.trim();
+    const text = document.getElementById('post-text').value.trim();
+    const file = document.getElementById('post-image').files[0];
+    if(!text && !file){ alert('Adicione texto ou imagem'); return; }
+    const meta = {
+      title: title || '',
+      text: text || '',
+      ts: Date.now(),
+      likes: 0,
+      uid: currentUser ? currentUser.uid : null,
+      authorName: currentUser ? (currentUser.displayName || currentUser.email) : 'anônimo',
+      authorPhoto: currentUser ? currentUser.photoURL || '' : ''
+    };
+
+    try {
+      fbStatus.textContent = 'publicando...';
+      // cria doc
+      const docRef = await db.collection('posts').add(meta);
+      const id = docRef.id;
+
+      // se tiver arquivo, sobe para storage e salva URL
+      if(file){
+        const ext = file.name.split('.').pop().slice(0,8);
+        const path = `posts/${id}/image.${ext}`;
+        const snap = await storage.ref(path).put(file);
+        const url = await snap.ref.getDownloadURL();
+        await docRef.update({ imageURL: url });
+      }
+
+      document.getElementById('post-title').value=''; document.getElementById('post-text').value=''; document.getElementById('post-image').value='';
+      fbStatus.textContent = 'ok';
+      toast('Post enviado');
+    } catch(e){
+      console.error(e);
+      fbStatus.textContent = 'erro';
+      alert('Erro ao enviar post: ' + e.message);
+    }
+  });
+
+  // LIKE: transaction
+  async function likePost(id){
+    const docRef = db.collection('posts').doc(id);
+    try{
+      await db.runTransaction(async (t)=>{
+        const doc = await t.get(docRef);
+        if(!doc.exists) throw 'Post removido';
+        const cur = doc.data().likes || 0;
+        t.update(docRef, { likes: cur + 1 });
+      });
+      // toast('Curtido!');
+    }catch(e){ console.error('like error', e); }
+  }
+
+  // REMOVE: autor ou mod key
+  async function removePost(id){
+    const docRef = db.collection('posts').doc(id);
+    const modKey = getModKey();
+    try {
+      const doc = await docRef.get();
+      if(!doc.exists){ alert('Post já removido'); return; }
+      const data = doc.data();
+      const isAuthor = currentUser && data.uid && currentUser.uid === data.uid;
+      const allowedByKey = modKey && id.startsWith(modKey); // demo simple
+      if(!isAuthor && !allowedByKey){
+        if(!confirm('Você não é o autor. Deseja apagar (apenas confirme para demo)?')) return;
+      }
+      // remove image from storage se existir
+      if(data.imageURL){
+        try {
+          // tenta remover por referência ao caminho (não sempre possível recuperar path)
+          // Como fallback não remove storage.
+          const ref = storage.refFromURL(data.imageURL);
+          await ref.delete();
+        } catch(e){
+          console.warn('Não foi possível deletar imagem do Storage:', e);
+        }
+      }
+      await docRef.delete();
+      toast('Post removido');
+    } catch(e){
+      console.error(e); alert('Erro ao remover: ' + e);
+    }
+  }
+
+  // RENDER posts (usando cache local)
+  function renderPosts(){
+    const arr = Object.values(postsCache).sort((a,b)=>b.ts - a.ts);
+    const q = document.getElementById('search').value.trim().toLowerCase();
+    postsFeed.innerHTML = '';
+    totalLikes = 0;
+    let shown = 0;
+    for(const item of arr){
+      if(q && !( (item.title||'').toLowerCase().includes(q) || (item.text||'').toLowerCase().includes(q) || (item.authorName||'').toLowerCase().includes(q))) continue;
+      shown++;
+      totalLikes += (item.likes||0);
+      const div = document.createElement('div'); div.className = 'post';
+      const date = new Date(item.ts);
+      div.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="display:flex;gap:10px;align-items:center">
+            <img src="${escapeHtml(item.authorPhoto||'')}" alt="" style="width:40px;height:40px;border-radius:999px;object-fit:cover" onerror="this.style.display='none'"/>
+            <div>
+              <div style="font-weight:800">${escapeHtml(item.authorName || 'anônimo')}</div>
+              <div class="small muted">${escapeHtml(item.title || '')}</div>
+            </div>
+          </div>
+          <div class="muted small">${date.toLocaleString()}</div>
+        </div>
+        <div style="margin-top:10px">${escapeHtml(item.text || '')}</div>
+        ${item.imageURL ? `<img src="${escapeHtml(item.imageURL)}" alt="imagem do post" />` : ''}
+        <div class="actions">
+          <button class="btn ghost" onclick="likePost('${item.id}')">❤️ ${item.likes||0}</button>
+          <button class="btn ghost" onclick="sharePost('${item.id}')">Link</button>
+          <button class="btn ghost" onclick="removePost('${item.id}')">Remover</button>
+        </div>
+      `;
+      postsFeed.appendChild(div);
+    }
+    countEl.textContent = Object.keys(postsCache).length;
+    likesTotalEl.textContent = totalLikes;
+    if(!shown){
+      postsFeed.innerHTML = '<div class="small muted">Nenhum post encontrado.</div>';
+    }
+  }
+
+  // Share link
+  function sharePost(id){
+    const url = location.href.split('#')[0] + '#post-' + id;
+    copyToClipboard(url);
+    toast('Link do post copiado');
+  }
+
+  // Escape
+  function escapeHtml(s){
+    if(!s) return '';
+    return String(s)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#39;')
+      .replace(/\n/g,'<br>');
+  }
+
+  // SUBSCRIBE realtime (onSnapshot)
+  function subscribeRealtime(){
+    fbStatus.textContent = 'conectando...';
+    db.collection('posts').orderBy('ts','desc').onSnapshot(snapshot=>{
+      snapshot.docChanges().forEach(change=>{
+        const id = change.doc.id;
+        const data = change.doc.data();
+        // normalize
+        const normalized = Object.assign({}, data, { id });
+        if(change.type === 'added' || change.type === 'modified'){
+          postsCache[id] = normalized;
+        } else if(change.type === 'removed'){
+          delete postsCache[id];
+        }
+      });
+      renderPosts();
+      fbStatus.textContent = 'online';
+    }, err=>{
+      console.error('snapshot error', err);
+      fbStatus.textContent = 'erro';
+    });
+  }
+
+  // NEWSLETTER fake
+  function fakeSubscribe(){
+    const el = document.getElementById('news-email');
+    if(!el.value.includes('@')){ document.getElementById('news-msg').textContent = 'Digite um e-mail válido'; return; }
+    document.getElementById('news-msg').textContent = 'Inscrição simulada - obrigado!';
+    setTimeout(()=>document.getElementById('news-msg').textContent='',2500);
+  }
+
+  // MOD KEY helper indicator
+  updateModIndicator();
+
+  // INIT
+  (function init(){
+    try {
+      subscribeRealtime();
+    } catch(e){
+      console.error('init error', e);
+      fbStatus.textContent = 'erro init';
+    }
+    // generate mega blocks (to make site huge)
+    let html = '';
+    for(let i=1;i<=600;i++){
+      html += `<div class="card">Bloco MASSIVO #${i} — este site é gigante (parte para recorde)</div>`;
+    }
+    megaBlocks.innerHTML = html;
+    // deep-scroll hash handling
+    if(location.hash && location.hash.startsWith('#post-')){
+      const id = location.hash.replace('#post-','');
+      setTimeout(()=>{ location.hash = ''; alert('Post link aberto: ' + id); }, 800);
+    }
+  })();
+
+  // small helpers
+  function scrollToId(id){ document.getElementById(id)?.scrollIntoView({behavior:'smooth'}); }
+  function setModKeyPrompt(){ setModKey(); }
+  function updateModIndicator(){ document.getElementById('mod-ind').textContent = getModKey() ? 'salva' : 'nenhuma'; }
+  function setModKey(){ setModKeyPrompt(); }
+
+  // share current url
+  function copyShare(){ copyToClipboard(location.href); }
+
+  // handle simple accessibility
+  document.getElementById('search').addEventListener('keydown', e=>{ if(e.key==='Enter') renderPosts(); });
+
+  // small utility: delete all posts (DANGEROUS) — commented out; for manual use only
+  // async function dangerousWipe(){ if(!confirm('confirmar wipe?')) return; const snap = await db.collection('posts').get(); snap.forEach(d => d.ref.delete()); }
+
+  // OPTIONAL: increment like count total periodically (kept up-to-date by render)
+  // end script
+  </script>
+</body>
+</html>
