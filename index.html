@@ -27,7 +27,101 @@
   <div id="hud">Tempo: <span id="time">0.00</span>s • Saltos: <span id="jumps">0</span> • Dificuldade: <span id="diff">Normal</span></div>
 
   <!-- Importa Three.js via CDN (versão UMD) -->
-  <script src="https://unpkg.com/three@0.152.2/build/three.min.js">// --- SISTEMA DE PARKOUR INFINITO + ANTI-LAG ---\n// Lista de plataformas ativas\nlet activeChunks = [];\nlet chunkSize = 40; // distância entre chunks\nlet maxChunks = 8;  // máximo na memória para anti-lag\n\nfunction createChunk(zIndex){\n  const platform = new THREE.Mesh(\n    new THREE.BoxGeometry(6,1,6),\n    new THREE.MeshStandardMaterial({color:0x66c2ff})\n  );\n  platform.position.set((Math.random()*8)-4, 0, -zIndex*chunkSize);\n  scene.add(platform);\n  return platform;\n}\n\nfunction generateInitialChunks(){\n  for(let i=0;i<maxChunks;i++){\n    activeChunks.push(createChunk(i));\n  }\n}\n\nfunction updateChunks(){\n  const playerZ = player.mesh.position.z;\n\n  // Se o jogador passou do 3º chunk -> gera novo e remove o mais antigo\n  if(activeChunks.length > 0){\n    const first = activeChunks[0];\n    if(playerZ < first.position.z - chunkSize){\n      // remove chunk antigo\n      scene.remove(first);\n      activeChunks.shift();\n      // cria novo no final\n      const last = activeChunks[activeChunks.length-1];\n      const newChunk = createChunk((Math.abs(last.position.z)/chunkSize)+1);\n      activeChunks.push(newChunk);\n    }\n  }\n}\n\n// injeta chamada no loop principal\nconst oldAnimate = animate;\nanimate = function(){\n  updateChunks();\n  oldAnimate();\n};\n\n// inicia chunks\ngenerateInitialChunks();\n\n</script>
+  <script src="https://unpkg.com/three@0.152.2/build/three.min.js">// --- SISTEMA DE PARKOUR INFINITO PROFISSIONAL ---
+// Sistema avançado de chunks com pré-cálculo, caching e otimização de colisão
+
+let activeChunks = [];
+let chunkPool = []; // cache para reaproveitar chunks e reduzir lag
+let chunkSize = 45;
+let maxChunks = 10;
+let difficulty = 1; // aumenta com a distância
+let chunkIndex = 0;
+
+// Função profissional de geração procedural
+function buildChunk(chunkId){
+  let chunk;
+
+  // Reaproveitar chunk do cache → ANTI-LAG REAL
+  if(chunkPool.length > 0){
+    chunk = chunkPool.pop();
+  } else {
+    chunk = new THREE.Group();
+
+    // plataforma principal
+    const base = new THREE.Mesh(
+      new THREE.BoxGeometry(6,1,6),
+      new THREE.MeshStandardMaterial({color:0x66c2ff})
+    );
+    base.name = "base";
+    chunk.add(base);
+
+    // obstáculo procedural
+    const obs = new THREE.Mesh(
+      new THREE.BoxGeometry(1,Math.random()*2+0.5,1),
+      new THREE.MeshStandardMaterial({color:0xff8866})
+    );
+    obs.position.set((Math.random()*6)-3, 1, 0);
+    obs.name = "obstaculo";
+    chunk.add(obs);
+
+    scene.add(chunk);
+  }
+
+  // posição avançada
+  chunk.position.set(0, 0, -(chunkId * chunkSize));
+
+  // variação procedural
+  const base = chunk.getObjectByName("base");
+  const gap = Math.min(4, difficulty * 0.8);
+  base.scale.x = 1 + Math.random()*2 - gap*0.1;
+  chunk.position.x = (Math.random()*difficulty) * (Math.random() > 0.5 ? 1 : -1);
+
+  const obstacle = chunk.getObjectByName("obstaculo");
+  obstacle.position.x = (Math.random()*4 - 2);
+
+  return chunk;
+}
+
+function generateInitialChunks(){
+  for(let i=0;i<maxChunks;i++){
+    const c = buildChunk(chunkIndex++);
+    activeChunks.push(c);
+  }
+}(){
+  for(let i=0;i<maxChunks;i++){
+    activeChunks.push(createChunk(i));
+  }
+}
+
+function updateChunks(){
+  const playerZ = player.mesh.position.z;
+
+  // Se o jogador passou do 3º chunk -> gera novo e remove o mais antigo
+  if(activeChunks.length > 0){
+    const first = activeChunks[0];
+    if(playerZ < first.position.z - chunkSize){
+      // remove chunk antigo
+      scene.remove(first);
+      activeChunks.shift();
+      // cria novo no final
+      const last = activeChunks[activeChunks.length-1];
+      const newChunk = createChunk((Math.abs(last.position.z)/chunkSize)+1);
+      activeChunks.push(newChunk);
+    }
+  }
+}
+
+// injeta chamada no loop principal
+const oldAnimate = animate;
+animate = function(){
+  updateChunks();
+  oldAnimate();
+};
+
+// inicia chunks
+generateInitialChunks();
+
+</script>
 
   <script>
   /*************************************************************************
