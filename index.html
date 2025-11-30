@@ -1,901 +1,296 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>MEGA COMPLEX SITE — @its.gbzin_ (Single File, Firebase) </title>
-<meta name="description" content="Mega site single-file do @its.gbzin_ — posts em tempo real, auth, upload, moderação, admin panel, offline cache e muito mais." />
-<meta name="author" content="@its.gbzin_" />
-<meta name="theme-color" content="#0b1221" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='60'%3E🌐%3C/text%3E%3C/svg%3E">
-
-<!-- Structured data for SEO -->
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"WebSite",
-  "name":"its.gbzin_ — Mega Site",
-  "url":"https://instagram.com/its.gbzin_",
-  "author": {"@type":"Person","name":"its.gbzin_","sameAs":["https://instagram.com/its.gbzin_"]},
-  "potentialAction": {"@type":"SearchAction","target":"?q={search_term}","query-input":"required name=search_term"}
-}
-</script>
-
-<style>
-/* =========================================================
-   Mega CSS - structured, commented, and extensible
-   - Use variables for easy theming
-   - Responsive grid layout
-   - Accessible focus states
-   ========================================================= */
-:root{
-  --bg:#05060a;
-  --panel:#0f1724;
-  --muted:#9aa4b2;
-  --accent:#7c3aed;
-  --accent-2:#06b6d4;
-  --glass:rgba(255,255,255,0.03);
-  --radius:12px;
-  --max-width:1400px;
-  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Segoe UI Mono", monospace;
-  --ease: cubic-bezier(.2,.9,.2,1);
-}
-
-/* Reset / base */
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  padding:18px;
-  font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  background:
-    radial-gradient(900px 400px at 10% 10%, rgba(124,58,237,0.06), transparent),
-    linear-gradient(180deg,#020217 0%, var(--bg) 100%);
-  color:#e6eef8;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  line-height:1.45;
-}
-
-/* Wrapper */
-.wrap{max-width:var(--max-width);margin:0 auto;display:flex;flex-direction:column;gap:18px}
-
-/* Header */
-.header{
-  display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border-radius:10px;
-  background:linear-gradient(180deg, rgba(255,255,255,0.018), transparent);
-  border:1px solid rgba(255,255,255,0.03);
-}
-.brand{display:flex;align-items:center;gap:12px}
-.logo{
-  width:68px;height:68px;border-radius:14px;display:grid;place-items:center;font-weight:900;
-  background:linear-gradient(135deg,var(--accent),var(--accent-2));
-  box-shadow:0 8px 30px rgba(2,6,23,0.7);
-}
-.title h1{margin:0;font-size:18px}
-.title p{margin:0;color:var(--muted);font-size:13px}
-
-/* Nav */
-.nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.btn{background:linear-gradient(90deg,var(--accent),var(--accent-2));padding:8px 12px;border-radius:10px;border:0;color:#041026;font-weight:800;cursor:pointer}
-.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
-.btn.small{padding:6px 8px;font-size:13px}
-a.btn{display:inline-block;text-decoration:none}
-
-/* Layout */
-main{display:grid;grid-template-columns:1fr 420px;gap:18px}
-@media (max-width:1060px){ main{grid-template-columns:1fr} .right{order:-1} }
-
-/* Panels */
-.panel{background:linear-gradient(180deg, rgba(255,255,255,0.015), transparent);padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 6px 20px rgba(2,6,23,0.6)}
-.small{font-size:13px;color:var(--muted)}
-
-/* Hero */
-.hero{display:flex;align-items:center;gap:18px}
-.hero .left{flex:1}
-.hero h2{margin:0;font-size:22px}
-.tag{display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#041026;font-weight:800}
-
-/* Grid helpers */
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-@media (max-width:720px){ .grid{grid-template-columns:1fr} }
-
-/* Portfolio / thumbs */
-.portfolio{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-@media (max-width:980px){ .portfolio{grid-template-columns:repeat(2,1fr)} }
-@media (max-width:520px){ .portfolio{grid-template-columns:1fr} }
-
-.thumb{height:110px;border-radius:10px;background:linear-gradient(135deg, rgba(124,58,237,0.12), rgba(6,182,212,0.06));display:flex;align-items:center;justify-content:center;font-weight:700;position:relative;overflow:hidden}
-
-/* Posts */
-.post-form{display:flex;flex-direction:column;gap:8px}
-input[type="text"], input[type="email"], textarea, select { background:transparent;border:1px solid rgba(255,255,255,0.04);padding:10px;border-radius:8px;color:inherit;width:100% }
-input[type="file"]{color:var(--muted)}
-.post-actions{display:flex;gap:8px;align-items:center}
-#postsFeed{display:grid;gap:12px;margin-top:12px}
-
-/* Single post */
-.post{padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent)}
-.post .meta{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:13px}
-.post img{max-width:100%;border-radius:8px;margin-top:10px}
-.actions{display:flex;gap:8px;margin-top:8px}
-
-/* Right column helpers */
-.right{display:flex;flex-direction:column;gap:12px}
-
-/* Big mega blocks (for record) */
-.mega-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:12px}
-
-/* Footer */
-footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px;padding:12px}
-
-/* Accessibility */
-:focus{outline:3px solid rgba(124,58,237,0.25);outline-offset:2px}
-.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-
-/* Tiny responsive tweaks */
-@media (max-width:420px){
-  .logo{width:56px;height:56px}
-  .title h1{font-size:16px}
-}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Parkour 3D - HTML + Three.js</title>
+  <style>
+    html,body { height:100%; margin:0; background:#111; overflow:hidden; font-family: Arial, Helvetica, sans-serif }
+    #overlay {
+      position: absolute; top: 12px; left: 12px; color: #fff; z-index: 10;
+      background: rgba(0,0,0,0.35); padding:10px 12px; border-radius:8px;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+    }
+    #instructions { font-size:14px; line-height:1.4 }
+    #hud { position:absolute; right:12px; top:12px; color:#fff; background:rgba(0,0,0,0.35); padding:10px; border-radius:8px }
+    canvas { display:block }
+    a { color: #4cc9f0 }
+  </style>
 </head>
 <body>
-<div class="wrap" id="app">
-  <!-- HEADER -->
-  <header class="header" role="banner">
-    <div class="brand">
-      <div class="logo" aria-hidden="true">GBZ</div>
-      <div class="title">
-        <h1>@its.gbzin_ — Mega Complex Site</h1>
-        <p class="small">Contato: <strong id="phone-display">15 996228860</strong> • Instagram: <strong>@its.gbzin_</strong></p>
-      </div>
+  <div id="overlay">
+    <div style="font-weight:700; margin-bottom:6px">Parkour 3D — Demo</div>
+    <div id="instructions">
+      WASD — mover • Espaço — pular • Shift — correr • Mouse — olhar
     </div>
+  </div>
+  <div id="hud">Tempo: <span id="time">0.0</span>s • Saltos: <span id="jumps">0</span></div>
 
-    <nav class="nav" role="navigation" aria-label="Principal">
-      <button class="btn" onclick="scrollToId('hero')">Início</button>
-      <button class="btn ghost" onclick="scrollToId('posts')">Posts</button>
-      <button class="btn ghost" onclick="scrollToId('admin')">Admin</button>
-      <a class="btn small" id="open-ig" href="https://instagram.com/its.gbzin_" target="_blank" rel="noopener">@its.gbzin_</a>
-      <button id="auth-btn" class="btn ghost small">Entrar (Google)</button>
-    </nav>
-  </header>
+  <!-- Three.js from CDN -->
+  <script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
 
-  <!-- MAIN LAYOUT -->
-  <main>
-    <!-- LEFT / MAIN -->
-    <section>
-      <!-- HERO -->
-      <div class="panel hero" id="hero" role="region" aria-labelledby="hero-title">
-        <div class="left">
-          <div class="tag">Recorde • Mega • Complexo</div>
-          <h2 id="hero-title">O site single-file mais complexo para @its.gbzin_ — posts em tempo real, uploads, auth, admin e muito mais.</h2>
-          <p class="small" style="margin-top:8px">Feito para escalar e ser modificado — com comentários, explicações e módulos prontos para você adaptar. Este arquivo contém componentes, lógica de frontend e integração com Firebase (Firestore + Storage + Auth).</p>
+  <script>
+    // Basic scene setup
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x7fbfff);
 
-          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn" onclick="scrollToId('posts')">Ir para Posts</button>
-            <button class="btn ghost" id="download-vcard">Baixar vCard</button>
-            <button class="btn ghost" onclick="copyToClipboard('@its.gbzin_')">Copiar IG</button>
-            <button class="btn ghost" onclick="copyToClipboard('15 996228860')">Copiar Telefone</button>
-          </div>
-        </div>
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
 
-        <div style="width:220px;text-align:right">
-          <div class="small muted">Status Firebase</div>
-          <div id="fb-status" class="small">inicializando...</div>
-        </div>
-      </div>
+    const renderer = new THREE.WebGLRenderer({antialias:true});
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
 
-      <!-- SECTIONS GRID -->
-      <div class="grid" style="margin-top:12px">
-        <div class="panel">
-          <h3>Serviços</h3>
-          <p class="small muted">Design, conteúdo, desenvolvimento e consultoria.</p>
-          <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
-            <span class="small">Branding</span><span class="small">Landing</span><span class="small">Reels</span><span class="small">Web</span>
-          </div>
-        </div>
+    // Lighting
+    const hemi = new THREE.HemisphereLight(0xffffee, 0x444466, 1.0);
+    hemi.position.set(0, 200, 0);
+    scene.add(hemi);
+    const dir = new THREE.DirectionalLight(0xffffff, 0.8);
+    dir.position.set(5, 10, 7.5);
+    scene.add(dir);
 
-        <div class="panel">
-          <h3>Sobre</h3>
-          <p class="small muted">Profissional com presença digital e projetos multifacetados. Use o painel admin para gerenciar conteúdo.</p>
-        </div>
+    // Simple ground
+    const groundMat = new THREE.MeshStandardMaterial({color:0x2b2b2b});
+    const groundGeo = new THREE.BoxGeometry(200, 1, 200);
+    const ground = new THREE.Mesh(groundGeo, groundMat);
+    ground.position.set(0, -0.5, 0);
+    scene.add(ground);
 
-        <div class="panel">
-          <h3 id="conteudos">Conteúdos</h3>
-          <p class="small muted">Tutoriais, análises, listas e ideias para criadores.</p>
-        </div>
+    // Player (a simple box)
+    const player = {
+      mesh: new THREE.Mesh(new THREE.BoxGeometry(0.8,1.8,0.8), new THREE.MeshStandardMaterial({color:0xffdd99})),
+      velocity: new THREE.Vector3(),
+      speed: 6,
+      onGround: false
+    };
+    player.mesh.position.set(0, 2, 8);
+    scene.add(player.mesh);
 
-        <div class="panel">
-          <h3>Portfólio</h3>
-          <div class="portfolio" style="margin-top:8px">
-            <div class="thumb">Identidade</div>
-            <div class="thumb">Landing</div>
-            <div class="thumb">Evento</div>
-          </div>
-        </div>
-      </div>
+    // Camera offset (third-person)
+    const camOffset = new THREE.Vector3(0, 2.2, 5);
 
-      <!-- POSTS (big section) -->
-      <div class="panel" id="posts" style="margin-top:14px" role="region" aria-labelledby="posts-title">
-        <h2 id="posts-title">Posts em tempo real — publique, curta, comente e faça upload</h2>
-        <p class="small muted">Login com Google adiciona verificação; anônimos também podem publicar (modo demo).</p>
-
-        <!-- FORM -->
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px">
-          <div style="flex:1;min-width:260px">
-            <div class="post-form">
-              <input id="post-title" type="text" placeholder="Título (opcional)" aria-label="Título do post" />
-              <textarea id="post-text" rows="4" placeholder="Compartilhe algo..." aria-label="Texto do post"></textarea>
-              <input id="post-image" type="file" accept="image/*" aria-label="Imagem do post" />
-              <div class="post-actions">
-                <button id="btn-post" class="btn">Publicar</button>
-                <button class="btn ghost" onclick="setModKey()">Definir chave mod</button>
-                <button class="btn ghost" onclick="clearModKey()">Limpar chave</button>
-                <div id="upload-progress" class="small" style="margin-left:8px"></div>
-              </div>
-              <div id="post-msg" class="small muted" style="margin-top:8px"></div>
-            </div>
-          </div>
-
-          <div style="width:320px">
-            <div class="panel">
-              <div class="small muted">Quem está online</div>
-              <div id="user-info" style="margin-top:8px">Anônimo</div>
-              <div style="height:8px"></div>
-              <div class="small muted">Chave local de moderação</div>
-              <div id="mod-ind" class="small muted">nenhuma</div>
-              <div style="height:8px"></div>
-              <div class="small muted">Pesquisar posts</div>
-              <input id="search" placeholder="Filtro..." oninput="renderPosts()" />
-            </div>
-          </div>
-        </div>
-
-        <!-- POSTS FEED -->
-        <div id="postsFeed" aria-live="polite" style="margin-top:12px"></div>
-      </div>
-
-      <!-- GIANT SECTION for record -->
-      <div class="panel" style="margin-top:12px">
-        <h2>Seções gigantes (gera centenas de blocos)</h2>
-        <p class="small muted">Use para encher o site e deixar impressionante — gerado automaticamente pelo script.</p>
-        <div id="megaGrid" class="mega-grid"></div>
-      </div>
-
-      <!-- ADMIN PANEL (hidden for normal users) -->
-      <div id="admin" class="panel" style="margin-top:12px">
-        <h2>Admin & Moderation</h2>
-        <p class="small muted">Ferramentas de administração para moderar posts, ver estatísticas e executar ações de massa (cuidado!).</p>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
-          <button class="btn ghost" onclick="openModeration()">Abrir moderação</button>
-          <button class="btn ghost" onclick="generateDemoPosts(10)">Gerar 10 posts demo</button>
-          <button class="btn ghost" onclick="exportPosts()">Exportar posts (JSON)</button>
-          <button class="btn ghost" onclick="importSample()">Importar amostra</button>
-        </div>
-
-        <div id="admin-panel" style="margin-top:12px"></div>
-      </div>
-
-    </section>
-
-    <!-- RIGHT COLUMN -->
-    <aside class="right" role="complementary">
-      <div class="panel">
-        <h3>Contato Rápido</h3>
-        <div class="small muted">WhatsApp</div>
-        <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
-          <div style="flex:1">15 996228860</div>
-          <a id="wa-link" class="btn ghost small" target="_blank" rel="noopener">Abrir WhatsApp</a>
-        </div>
-
-        <div style="height:8px"></div>
-        <div class="small muted">Instagram</div>
-        <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
-          <div style="flex:1">@its.gbzin_</div>
-          <a class="btn ghost small" href="https://instagram.com/its.gbzin_" target="_blank" rel="noopener">Abrir</a>
-        </div>
-      </div>
-
-      <div class="panel">
-        <h3>Estatísticas</h3>
-        <div class="small muted" style="margin-top:8px">Posts totais: <strong id="count">0</strong></div>
-        <div class="small muted" style="margin-top:6px">Curtidas totais: <strong id="likes-total">0</strong></div>
-        <div style="height:8px"></div>
-        <div class="small muted">Conexão Firebase:</div>
-        <div id="con-status" class="small muted">—</div>
-      </div>
-
-      <div class="panel">
-        <h3>Assine novidades</h3>
-        <div style="display:flex;gap:8px;margin-top:8px">
-          <input id="news-email" placeholder="seu@email.com" />
-          <button class="btn" onclick="fakeSubscribe()">Assinar</button>
-        </div>
-        <div id="news-msg" class="small muted" style="margin-top:8px"></div>
-      </div>
-
-    </aside>
-  </main>
-
-  <footer>
-    © <span id="year"></span> @its.gbzin_ • Contato: 15 996228860 • Mega Complex Site
-  </footer>
-</div>
-
-<!-- =========================================================
-     Firebase (compat libraries for simplicity in single file)
-     If you prefer modular SDK (v9) we can refactor to imports.
-     ========================================================= -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
-
-<script>
-/* =========================================================
-   CONFIGURAÇÃO FIREBASE - Use a configuração que você forneceu
-   (já enviada por você). Não altere se não for necessário.
-   ========================================================= */
-const firebaseConfig = {
-  apiKey: "AIzaSyANLqvkka2W2Fbnm59I-MXEm-nEo_is1Sw",
-  authDomain: "gbxui-b5063.firebaseapp.com",
-  projectId: "gbxui-b5063",
-  storageBucket: "gbxui-b5063.firebasestorage.app",
-  messagingSenderId: "57132814774",
-  appId: "1:57132814774:web:e4583040dd27a8ab637117"
-};
-
-/* =========================================================
-   Inicialização Firebase
-   ========================================================= */
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
-const storage = firebase.storage();
-
-/* =========================================================
-   Estado / caches locais
-   ========================================================= */
-let currentUser = null;
-let postsCache = {}; // id -> doc data
-let totalLikes = 0;
-
-/* =========================================================
-   Utilitários gerais
-   ========================================================= */
-function $(sel){ return document.querySelector(sel); }
-function $all(sel){ return Array.from(document.querySelectorAll(sel)); }
-function toast(msg, time=1800){
-  const el = document.createElement('div');
-  el.textContent = msg;
-  el.style.position='fixed';el.style.right='18px';el.style.bottom='18px';
-  el.style.padding='10px 14px';el.style.background='rgba(0,0,0,0.7)';
-  el.style.color='white';el.style.borderRadius='10px';el.style.zIndex=9999;
-  document.body.appendChild(el);
-  setTimeout(()=>el.style.opacity='0', time-500);
-  setTimeout(()=>el.remove(), time);
-}
-async function copyToClipboard(text){
-  try{ await navigator.clipboard.writeText(text); toast('Copiado: ' + text); }catch(e){ alert('Falha ao copiar: ' + text); }
-}
-function escapeHtml(s){ if(!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/\n/g,'<br>'); }
-function scrollToId(id){ document.getElementById(id)?.scrollIntoView({behavior:'smooth'}); }
-
-/* =========================================================
-   Inicializações visuais
-   ========================================================= */
-document.getElementById('year').textContent = new Date().getFullYear();
-document.getElementById('wa-link').href = 'https://wa.me/5515996228860';
-document.getElementById('phone-display').textContent = '15 996228860';
-
-/* =========================================================
-   Auth: Google Sign-in + anonymous fallback
-   - auth.onAuthStateChanged mantém currentUser
-   - auth with popup requires domain authorized in Firebase console
-   ========================================================= */
-const authBtn = document.getElementById('auth-btn');
-authBtn.addEventListener('click', async ()=>{
-  if(currentUser){
-    await auth.signOut();
-    return;
-  }
-  const provider = new firebase.auth.GoogleAuthProvider();
-  try {
-    await auth.signInWithPopup(provider);
-  } catch (e) {
-    console.warn('Auth popup falhou, tentando auth anon:', e);
-    try{
-      await auth.signInAnonymously();
-      toast('Entrou como anônimo (popup bloqueado).');
-    }catch(err){ alert('Erro autenticação: ' + err.message); }
-  }
-});
-
-auth.onAuthStateChanged(user=>{
-  currentUser = user;
-  if(user){
-    // display user info
-    const name = user.displayName || 'Usuário';
-    const mail = user.email || 'anônimo';
-    const photo = user.photoURL || '';
-    $('#user-info').innerHTML = `
-      <div style="display:flex;gap:8px;align-items:center">
-        ${photo ? `<img src="${photo}" alt="" style="width:40px;height:40px;border-radius:999px;object-fit:cover" />` : ''}
-        <div>
-          <div style="font-weight:800">${escapeHtml(name)}</div>
-          <div class="small muted">${escapeHtml(mail)}</div>
-        </div>
-      </div>
-    `;
-    authBtn.textContent = 'Sair';
-  } else {
-    $('#user-info').textContent = 'Anônimo';
-    authBtn.textContent = 'Entrar (Google)';
-  }
-});
-
-/* =========================================================
-   MOD KEY (local) - simples, salva no localStorage
-   - usado para demo de moderação
-   ========================================================= */
-function setModKey(){
-  const k = prompt('Defina uma chave local de moderação (será salva no navegador):');
-  if(k){ localStorage.setItem('gbz_mod_key', k); updateModIndicator(); toast('Chave salva'); }
-}
-function clearModKey(){ localStorage.removeItem('gbz_mod_key'); updateModIndicator(); toast('Chave limpa'); }
-function getModKey(){ return localStorage.getItem('gbz_mod_key') || null; }
-function updateModIndicator(){ $('#mod-ind').textContent = getModKey() ? 'salva' : 'nenhuma'; }
-updateModIndicator();
-
-/* =========================================================
-   vCard download
-   ========================================================= */
-$('#download-vcard').addEventListener('click', ()=>{
-  const vcard = [
-    'BEGIN:VCARD',
-    'VERSION:3.0',
-    'FN:its.gbzin_',
-    'TEL;TYPE=WORK,VOICE:+5515996228860',
-    'URL:https://instagram.com/its.gbzin_',
-    'NOTE:Contato profissional — Instagram: @its.gbzin_',
-    'END:VCARD'
-  ].join('\r\n');
-  const blob = new Blob([vcard], {type:'text/vcard'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href=url; a.download='its-gbzin.vcf'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-  toast('vCard gerado');
-});
-
-/* =========================================================
-   POSTS: create (with optional image upload), like, remove
-   - Firestore collection: posts
-   - Storage path: posts/{id}/image.ext
-   ========================================================= */
-$('#btn-post').addEventListener('click', async ()=>{
-  const title = $('#post-title').value.trim();
-  const text = $('#post-text').value.trim();
-  const file = $('#post-image').files[0];
-  if(!text && !file){ alert('Adicione texto ou imagem'); return; }
-
-  const meta = {
-    title: title || '',
-    text: text || '',
-    ts: Date.now(),
-    likes: 0,
-    uid: currentUser ? currentUser.uid : null,
-    authorName: currentUser ? (currentUser.displayName || currentUser.email) : 'anônimo',
-    authorPhoto: currentUser ? currentUser.photoURL || '' : ''
-  };
-
-  try {
-    $('#post-msg').textContent = 'Publicando...';
-    // create doc
-    const docRef = await db.collection('posts').add(meta);
-    const id = docRef.id;
-
-    if(file){
-      // file upload with progress
-      const ext = file.name.split('.').pop().slice(0,8);
-      const path = `posts/${id}/image.${ext}`;
-      const uploadTask = storage.ref(path).put(file);
-
-      uploadTask.on('state_changed', snapshot=>{
-        const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-        $('#upload-progress').textContent = `Upload: ${pct}%`;
-      });
-
-      const snap = await uploadTask;
-      const url = await snap.ref.getDownloadURL();
-      await docRef.update({ imageURL: url });
-      $('#upload-progress').textContent = 'Upload concluído';
+    // Platforms array (position x,y,z and size x,y,z)
+    const platforms = [];
+    function addPlatform(x,y,z, sx,sy,sz, color=0x88cc88) {
+      const mat = new THREE.MeshStandardMaterial({color});
+      const geo = new THREE.BoxGeometry(sx,sy,sz);
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.position.set(x,y,z);
+      scene.add(mesh);
+      platforms.push({mesh, min:new THREE.Vector3(), max:new THREE.Vector3()});
+      updateAABB(platforms[platforms.length-1]);
     }
 
-    // Cleanup
-    $('#post-title').value = ''; $('#post-text').value = ''; $('#post-image').value = '';
-    $('#post-msg').textContent = '';
-    toast('Post publicado');
-  } catch (err) {
-    console.error('Erro publicar', err);
-    $('#post-msg').textContent = 'Erro: ' + err.message;
-  }
-});
-
-/* =========================================================
-   Like: atomic transaction using Firestore transactions
-   ========================================================= */
-async function likePost(id){
-  const docRef = db.collection('posts').doc(id);
-  try{
-    await db.runTransaction(async t => {
-      const doc = await t.get(docRef);
-      if(!doc.exists) throw 'Post não existe';
-      const cur = doc.data().likes || 0;
-      t.update(docRef, { likes: cur + 1 });
-    });
-  } catch(e){ console.error('like error', e); }
-}
-
-/* =========================================================
-   Remove post: allowed if author OR mod key (demo)
-   Also removes image from Storage if present (best-effort)
-   ========================================================= */
-async function removePost(id){
-  const docRef = db.collection('posts').doc(id);
-  try {
-    const doc = await docRef.get();
-    if(!doc.exists){ alert('Post já removido'); return; }
-    const data = doc.data();
-    const isAuthor = currentUser && data.uid && currentUser.uid === data.uid;
-    const modKey = getModKey();
-    const allowedByKey = modKey && id.startsWith(modKey); // demo simple rule
-    if(!isAuthor && !allowedByKey){
-      if(!confirm('Você não é o autor. Deseja apagar (apenas confirme para demo)?')) return;
+    function updateAABB(p) {
+      const pos = p.mesh.position;
+      const s = new THREE.Vector3();
+      p.mesh.geometry.computeBoundingBox();
+      p.mesh.geometry.boundingBox.getSize(s);
+      p.min.copy(pos).sub(s.clone().multiplyScalar(0.5));
+      p.max.copy(pos).add(s.clone().multiplyScalar(0.5));
     }
-    // remove image if exists
-    if(data.imageURL){
-      try { const ref = storage.refFromURL(data.imageURL); await ref.delete(); } catch(e){ console.warn('Não foi possível deletar imagem:', e); }
+
+    // Level design: start platform + series of platforms as parkour
+    addPlatform(0,0,10, 6,1,6, 0x6fbf73); // start
+    addPlatform(0,0,0, 4,1,4, 0x7fa8ff);
+    addPlatform(4,1.2,-6, 3,0.6,3, 0xffcc66);
+    addPlatform(8,2.6,-12, 3,0.6,3, 0xff8866);
+    addPlatform(12,4.0,-18, 4,0.6,4, 0x88ddcc);
+    addPlatform(17,5.6,-25, 5,0.6,5, 0xcc88ff);
+    addPlatform(23,7.2,-32, 6,0.6,6, 0xffe066);
+    addPlatform(30,9.0,-40, 8,1,8, 0x66c2ff); // finish
+
+    // Add some side obstacles
+    addPlatform(2,0.7,4, 1,1.4,1, 0x993333);
+    addPlatform(6,1.9,-8, 1.4,1.4,1.4, 0x334499);
+
+    // Mark finish
+    const finish = platforms[platforms.length-1];
+
+    // Simple AABB collision detection between player and platform
+    function aabbIntersect(minA, maxA, minB, maxB) {
+      return (minA.x <= maxB.x && maxA.x >= minB.x) &&
+             (minA.y <= maxB.y && maxA.y >= minB.y) &&
+             (minA.z <= maxB.z && maxA.z >= minB.z);
     }
-    await docRef.delete();
-    toast('Post removido');
-  } catch(e){ console.error(e); alert('Erro ao remover: ' + e); }
-}
 
-/* =========================================================
-   Render posts from postsCache
-   - postsCache updated in real-time snapshot
-   - renderPosts applies filter and builds DOM
-   ========================================================= */
-function renderPosts(){
-  const arr = Object.values(postsCache).sort((a,b)=>b.ts - a.ts);
-  const q = $('#search').value.trim().toLowerCase();
-  $('#postsFeed').innerHTML = '';
-  totalLikes = 0;
-  let shown = 0;
-  for(const item of arr){
-    if(q && !( (item.title||'').toLowerCase().includes(q) || (item.text||'').toLowerCase().includes(q) || (item.authorName||'').toLowerCase().includes(q) )) continue;
-    shown++;
-    totalLikes += (item.likes || 0);
-    const div = document.createElement('div'); div.className = 'post';
-    const date = new Date(item.ts);
-    div.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div style="display:flex;gap:10px;align-items:center">
-          ${item.authorPhoto ? `<img src="${escapeHtml(item.authorPhoto)}" alt="" style="width:40px;height:40px;border-radius:999px;object-fit:cover" />` : ''}
-          <div>
-            <div style="font-weight:800">${escapeHtml(item.authorName||'anônimo')}</div>
-            <div class="small muted">${escapeHtml(item.title||'')}</div>
-          </div>
-        </div>
-        <div class="small muted">${date.toLocaleString()}</div>
-      </div>
-      <div style="margin-top:10px">${escapeHtml(item.text||'')}</div>
-      ${item.imageURL ? `<img src="${escapeHtml(item.imageURL)}" alt="imagem do post">` : ''}
-      <div class="actions">
-        <button class="btn ghost small" onclick="likePost('${item.id}')">❤️ ${item.likes||0}</button>
-        <button class="btn ghost small" onclick="sharePost('${item.id}')">Link</button>
-        <button class="btn ghost small" onclick="removePost('${item.id}')">Remover</button>
-      </div>
-    `;
-    $('#postsFeed').appendChild(div);
-  }
-  $('#count').textContent = Object.keys(postsCache).length;
-  $('#likes-total').textContent = totalLikes;
-  if(!shown) $('#postsFeed').innerHTML = '<div class="small muted">Nenhum post encontrado.</div>';
-}
-
-/* =========================================================
-   Real-time subscription: onSnapshot for posts
-   - keeps postsCache in sync
-   ========================================================= */
-function subscribeRealtime(){
-  $('#fb-status').textContent = 'conectando...';
-  db.collection('posts').orderBy('ts','desc')
-    .onSnapshot(snapshot=>{
-      snapshot.docChanges().forEach(change=>{
-        const id = change.doc.id;
-        const data = change.doc.data();
-        const normalized = Object.assign({}, data, { id });
-        if(change.type === 'added' || change.type === 'modified'){
-          postsCache[id] = normalized;
-        } else if(change.type === 'removed'){
-          delete postsCache[id];
-        }
-      });
-      renderPosts();
-      $('#fb-status').textContent = 'online';
-      $('#con-status').textContent = 'online';
-    }, err=>{
-      console.error('snapshot erro', err);
-      $('#fb-status').textContent = 'erro';
-      $('#con-status').textContent = 'erro';
-    });
-}
-
-/* =========================================================
-   Sharing post link helper
-   ========================================================= */
-function sharePost(id){
-  const url = location.href.split('#')[0] + '#post-' + id;
-  copyToClipboard(url);
-  toast('Link do post copiado');
-}
-
-/* =========================================================
-   Admin helpers: moderation, export, import
-   ========================================================= */
-function openModeration(){
-  const el = $('#admin-panel');
-  el.innerHTML = '<div class="small muted">Carregando moderação...</div>';
-  // build simple mod UI
-  let html = '<div style="display:flex;gap:8px;flex-wrap:wrap">';
-  html += `<button class="btn ghost" onclick="bulkDeleteFlagged()">Apagar posts marcados (demo)</button>`;
-  html += `<button class="btn ghost" onclick="bulkExport()">Exportar posts (JSON)</button>`;
-  html += `</div><div style="margin-top:12px" id="mod-list"></div>`;
-  el.innerHTML = html;
-  // list posts with checkboxes
-  const modList = document.getElementById('mod-list');
-  modList.innerHTML = '<div class="small muted">Carregando posts...</div>';
-  db.collection('posts').orderBy('ts','desc').limit(100).get().then(snap=>{
-    const nodes = [];
-    snap.forEach(doc=>{
-      const d = doc.data();
-      nodes.push(`<div style="padding:8px;border-bottom:1px solid rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:space-between">
-        <div>
-          <div style="font-weight:800">${escapeHtml(d.authorName||'anônimo')}</div>
-          <div class="small muted">${escapeHtml(d.title||'')} — ${new Date(d.ts).toLocaleString()}</div>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <button class="btn ghost small" onclick="removePost('${doc.id}')">Apagar</button>
-        </div>
-      </div>`);
-    });
-    modList.innerHTML = nodes.join('');
-  }).catch(e => { modList.innerHTML = 'Erro ao carregar posts: ' + e.message; });
-}
-
-// export posts as JSON
-async function exportPosts(){
-  const snap = await db.collection('posts').orderBy('ts','desc').get();
-  const arr = [];
-  snap.forEach(doc => arr.push({ id: doc.id, ...doc.data() }));
-  const blob = new Blob([JSON.stringify(arr, null, 2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'posts_export.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-  toast('Export gerado');
-}
-
-// import sample posts (demo)
-async function importSample(){
-  const samples = [
-    { title:'Boas-vindas', text:'Primeiro post de teste — bem-vindo ao mega site!', ts:Date.now(), likes:0, authorName:'Sistema' },
-    { title:'Dica', text:'Use este site como demo para o livro dos recordes!', ts:Date.now(), likes:0, authorName:'Sistema' }
-  ];
-  for(const s of samples){
-    await db.collection('posts').add(s);
-  }
-  toast('Amostra importada');
-}
-
-/* =========================================================
-   DEMO: generate N posts quickly (for testing)
-   ========================================================= */
-async function generateDemoPosts(n=50){
-  for(let i=0;i<n;i++){
-    await db.collection('posts').add({
-      title: 'Demo #' + (i+1),
-      text: 'Conteúdo demo automático para testes. #' + (i+1) + ' — criado em ' + new Date().toISOString(),
-      ts: Date.now() + i,
-      likes: Math.floor(Math.random()*20),
-      authorName: 'DemoBot'
-    });
-  }
-  toast(n + ' posts gerados (demo)');
-}
-
-/* =========================================================
-   Export/import bulk helpers (safe)
-   ========================================================= */
-async function bulkExport(){
-  const snap = await db.collection('posts').orderBy('ts','desc').get();
-  const arr = [];
-  snap.forEach(doc => arr.push({ id: doc.id, ...doc.data() }));
-  const blob = new Blob([JSON.stringify(arr, null, 2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'posts_bulk_export.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-  toast('Export pronto');
-}
-
-/* =========================================================
-   Utilities: importPosts from JSON (simple)
-   ========================================================= */
-async function importPostsFromArray(arr){
-  for(const item of arr){
-    const copy = Object.assign({}, item);
-    delete copy.id;
-    await db.collection('posts').add(copy);
-  }
-  toast('Import concluído');
-}
-
-/* =========================================================
-   Generate huge number of DOM blocks (mega) — used to make site "gigante"
-   ========================================================= */
-(function generateMegaBlocks(){
-  const container = document.getElementById('megaGrid');
-  let html = '';
-  // we'll generate 400 blocks to make site heavy but still usable
-  for(let i=1;i<=400;i++){
-    html += `<div class="panel" style="padding:12px"><div style="font-weight:800">Mega bloco #${i}</div><div class="small muted">Descrição gerada automaticamente para o bloco ${i} — parte do conjunto massivo para recorde.</div></div>`;
-  }
-  container.innerHTML = html;
-})();
-
-/* =========================================================
-   Subscribe real-time to Firestore 'posts' collection
-   ========================================================= */
-subscribeRealtime();
-
-/* =========================================================
-   Offline caching: store last N posts in localStorage for offline view
-   - Saves snapshot every time we update postsCache
-   ========================================================= */
-function savePostsCacheLocal(){
-  try{
-    const arr = Object.values(postsCache).slice(0,200); // limit size
-    localStorage.setItem('gbz_posts_cache_v1', JSON.stringify(arr));
-  }catch(e){ console.warn('save cache failed', e); }
-}
-function loadPostsCacheLocal(){
-  try{
-    const str = localStorage.getItem('gbz_posts_cache_v1');
-    if(!str) return;
-    const arr = JSON.parse(str);
-    postsCache = {};
-    arr.forEach(it => postsCache[it.id] = it);
-    renderPosts();
-    toast('Carregado cache local (' + arr.length + ' posts)');
-  }catch(e){ console.warn('load cache failed', e); }
-}
-// Try load on init
-loadPostsCacheLocal();
-// Save periodically
-setInterval(savePostsCacheLocal, 1000 * 20);
-
-/* =========================================================
-   Listen to snapshot changes and persist cache + analytics
-   ========================================================= */
-let lastSnapshotTime = 0;
-function onSnapshotUpdate(){
-  savePostsCacheLocal();
-  // update small analytics
-  // (You could push events to analytics here)
-  lastSnapshotTime = Date.now();
-}
-// wrap subscribeRealtime to call onSnapshotUpdate inside changes (already done inside subscribeRealtime via renderPosts call)
-const originalRenderPosts = renderPosts;
-renderPosts = function(){
-  originalRenderPosts();
-  onSnapshotUpdate();
-}
-
-/* =========================================================
-   Share link handler for hash deep-linking (open post on load)
-   ========================================================= */
-if(location.hash && location.hash.startsWith('#post-')){
-  const id = location.hash.replace('#post-','');
-  // We'll show small alert when loaded (after posts arrive)
-  const check = setInterval(()=>{
-    if(Object.keys(postsCache).length){
-      clearInterval(check);
-      const p = postsCache[id];
-      if(p) alert('Abrindo post: ' + (p.title || p.text.slice(0,40)));
-      else alert('Post não encontrado: ' + id);
+    function updatePlayerAABB() {
+      const box = new THREE.Box3().setFromObject(player.mesh);
+      return {min:box.min.clone(), max:box.max.clone()};
     }
-  }, 500);
-}
 
-/* =========================================================
-   Misc helpers: fake newsletter subscribe
-   ========================================================= */
-function fakeSubscribe(){
-  const el = $('#news-email');
-  if(!el.value || !el.value.includes('@')){ $('#news-msg').textContent = 'Digite um e-mail válido.'; return; }
-  $('#news-msg').textContent = 'Assinatura simulada — obrigado!';
-  setTimeout(()=>$('#news-msg').textContent = '', 3000);
-}
+    // Controls state
+    const keys = { w:false,a:false,s:false,d:false, shift:false };
+    window.addEventListener('keydown', e => {
+      if (e.code === 'KeyW') keys.w = true;
+      if (e.code === 'KeyA') keys.a = true;
+      if (e.code === 'KeyS') keys.s = true;
+      if (e.code === 'KeyD') keys.d = true;
+      if (e.code === 'ShiftLeft') keys.shift = true;
+      if (e.code === 'Space') { jump(); }
+    });
+    window.addEventListener('keyup', e => {
+      if (e.code === 'KeyW') keys.w = false;
+      if (e.code === 'KeyA') keys.a = false;
+      if (e.code === 'KeyS') keys.s = false;
+      if (e.code === 'KeyD') keys.d = false;
+      if (e.code === 'ShiftLeft') keys.shift = false;
+    });
 
-/* =========================================================
-   Export posts cache (download)
-   ========================================================= */
-function exportPosts(){
-  const arr = Object.values(postsCache);
-  const blob = new Blob([JSON.stringify(arr, null, 2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'posts_cache.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-  toast('Export do cache feito');
-}
+    // Mouse look: rotate player toward mouse movement
+    let yaw = 0;
+    let pitch = 0;
+    let pointerLocked = false;
+    renderer.domElement.addEventListener('click', ()=> renderer.domElement.requestPointerLock());
+    document.addEventListener('pointerlockchange', ()=> { pointerLocked = !!document.pointerLockElement; });
+    document.addEventListener('mousemove', (e)=>{
+      if (!pointerLocked) return;
+      yaw -= e.movementX * 0.0025;
+      pitch -= e.movementY * 0.0025;
+      pitch = Math.max(-1.2, Math.min(1.2, pitch));
+    });
 
-/* =========================================================
-   Small accessibility and keyboard shortcuts
-   - Press "N" to focus new post box
-   - Press "S" to focus search
-   ========================================================= */
-window.addEventListener('keydown', (e)=>{
-  if(e.key === 'N' || e.key === 'n'){ e.preventDefault(); $('#post-text').focus(); }
-  if(e.key === 'S' || e.key === 's'){ e.preventDefault(); $('#search').focus(); }
-  if(e.key === 'Escape'){ // close modals etc (if implemented)
-    // placeholder
-  }
-});
+    // Jump
+    let jumpCount = 0;
+    const hudJumps = document.getElementById('jumps');
+    function jump() {
+      if (player.onGround) {
+        player.velocity.y = 8.2; // initial jump speed
+        player.onGround = false;
+        jumpCount++;
+        hudJumps.textContent = jumpCount;
+      }
+    }
 
-/* =========================================================
-   Service worker registration (optional) - register via blob
-   - Single-file approach: create SW script as blob and register it.
-   - Note: for full offline capability serve via https.
-   ========================================================= */
-(async function registerServiceWorkerInline(){
-  if('serviceWorker' in navigator){
-    try{
-      // create service worker source
-      const swSource = `
-        const CACHE_NAME = 'gbz-mega-v1';
-        const toCache = ['/', location.pathname];
-        self.addEventListener('install', e => {
-          self.skipWaiting();
-          e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(toCache)).catch(()=>{}));
-        });
-        self.addEventListener('activate', e => { e.waitUntil(self.clients.claim()); });
-        self.addEventListener('fetch', e => {
-          // network-first for API calls, cache-first for navigation/static
-          const url = new URL(e.request.url);
-          if(url.pathname.includes('/__/') || url.pathname.includes('/firebase/') || url.pathname.includes('/posts')){
-            e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)));
-            return;
+    // Basic stopwatch
+    let startTime = performance.now();
+    const timeEl = document.getElementById('time');
+
+    // Main loop
+    const clock = new THREE.Clock();
+    function animate() {
+      const dt = Math.min(0.05, clock.getDelta());
+
+      // Movement input
+      const dir = new THREE.Vector3();
+      if (keys.w) dir.z -= 1;
+      if (keys.s) dir.z += 1;
+      if (keys.a) dir.x -= 1;
+      if (keys.d) dir.x += 1;
+      if (dir.lengthSq() > 0) dir.normalize();
+
+      // speed
+      const baseSpeed = keys.shift ? player.speed * 1.6 : player.speed;
+      // rotate movement by yaw
+      const forward = new THREE.Vector3(Math.sin(yaw),0,Math.cos(yaw));
+      const right = new THREE.Vector3(Math.cos(yaw),0,-Math.sin(yaw));
+      const move = new THREE.Vector3();
+      move.addScaledVector(forward, dir.z * baseSpeed * dt);
+      move.addScaledVector(right, dir.x * baseSpeed * dt);
+
+      // Apply horizontal move
+      player.mesh.position.add(move);
+
+      // Gravity
+      player.velocity.y -= 20 * dt; // gravity
+      player.mesh.position.y += player.velocity.y * dt;
+
+      // Update AABB and collision with platforms
+      const pBox = updatePlayerAABB();
+
+      // Assume not on ground; test collision pairs
+      player.onGround = false;
+      for (let p of platforms) {
+        updateAABB(p);
+        const platMin = p.min, platMax = p.max;
+        if (aabbIntersect(pBox.min, pBox.max, platMin, platMax)) {
+          // Determine penetration along Y
+          const prevY = player.mesh.position.y - player.velocity.y * dt;
+          // If previous bottom was above platform top, land on top
+          const playerBottom = pBox.min.y;
+          const platTop = platMax.y;
+          if (playerBottom <= platTop + 0.15 && (player.mesh.position.y - player.velocity.y*dt) >= platTop - 0.5) {
+            // land on platform
+            player.mesh.position.y = platTop + ( (pBox.max.y - pBox.min.y) / 2 );
+            player.velocity.y = 0;
+            player.onGround = true;
+          } else {
+            // Simple horizontal collision push-out — push player out along X/Z
+            const overlapX = Math.min(pBox.max.x, platMax.x) - Math.max(pBox.min.x, platMin.x);
+            const overlapZ = Math.min(pBox.max.z, platMax.z) - Math.max(pBox.min.z, platMin.z);
+            if (overlapX < overlapZ) {
+              // push along X
+              if (pBox.min.x < platMin.x) player.mesh.position.x -= overlapX + 0.01;
+              else player.mesh.position.x += overlapX + 0.01;
+            } else {
+              if (pBox.min.z < platMin.z) player.mesh.position.z -= overlapZ + 0.01;
+              else player.mesh.position.z += overlapZ + 0.01;
+            }
           }
-          e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
-        });
-      `;
-      const blob = new Blob([swSource], {type: 'text/javascript'});
-      const swUrl = URL.createObjectURL(blob);
-      await navigator.serviceWorker.register(swUrl);
-      console.log('SW registrado (inline)');
-    }catch(e){ console.warn('SW registro falhou', e); }
-  }
-})();
+          // update player AABB after push
+          Object.assign(pBox, updatePlayerAABB());
+        }
+      }
 
-/* =========================================================
-   Final notes: ensure Firestore rules in console are configured.
-   Example permissive rules for dev (NOT for production):
-   service cloud.firestore {
-     match /databases/{database}/documents {
-       match /posts/{doc} {
-         allow read, write: if true;
-       }
-     }
-   }
-   ========================================================= */
+      // Prevent falling infinitely
+      if (player.mesh.position.y < -40) {
+        resetPlayer();
+      }
 
-</script>
+      // Rotate player visual to face yaw
+      player.mesh.rotation.y = yaw;
+
+      // Camera follow
+      const camTarget = player.mesh.position.clone().add(new THREE.Vector3(0,1.0,0));
+      const camPos = camTarget.clone().add(new THREE.Vector3(
+        Math.sin(yaw) * camOffset.z,
+        camOffset.y,
+        Math.cos(yaw) * camOffset.z
+      ));
+      camera.position.lerp(camPos, 0.14);
+      camera.lookAt(camTarget);
+
+      // Check finish
+      const finishBox = {min:finish.min, max:finish.max};
+      const playerBox = updatePlayerAABB();
+      if (aabbIntersect(playerBox.min, playerBox.max, finishBox.min, finishBox.max)) {
+        const total = ((performance.now() - startTime) / 1000).toFixed(2);
+        setTimeout(()=>{ alert('Você completou o percurso! Tempo: ' + total + 's • Saltos: ' + jumpCount); resetLevel(); }, 120);
+      }
+
+      // update HUD
+      timeEl.textContent = ((performance.now() - startTime)/1000).toFixed(2);
+
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+
+    function resetPlayer() {
+      player.mesh.position.set(0,2,8);
+      player.velocity.set(0,0,0);
+      yaw = 0; pitch = 0;
+    }
+
+    function resetLevel() {
+      resetPlayer();
+      startTime = performance.now();
+      jumpCount = 0;
+      hudJumps.textContent = jumpCount;
+    }
+
+    // Resize
+    window.addEventListener('resize', ()=>{
+      camera.aspect = window.innerWidth/window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // Start
+    resetLevel();
+    animate();
+
+    // Helpful note in console
+    console.log('Parkour 3D iniciado — clique no jogo para controlar o mouse.');
+  </script>
 </body>
 </html>
